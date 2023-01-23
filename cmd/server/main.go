@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ var (
 	secret_token = flag.String("secret_token", "", "Token to authorize requests")
 )
 
-func hello(w http.ResponseWriter, req *http.Request) {
+func Hello(w http.ResponseWriter, req *http.Request) {
 	if req.Header.Get("Authorization") != "Bearer "+*secret_token {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -51,17 +51,4 @@ func hello(w http.ResponseWriter, req *http.Request) {
 	</body>
 	</html>
 	`)
-}
-
-func main() {
-	flag.Parse()
-
-	if *secret_token == "" {
-		*secret_token = fmt.Sprintf("changeme:%d", rand.Int())
-	}
-
-	http.HandleFunc("/api/hello", hello)
-
-	fmt.Fprintf(os.Stderr, "Serving on %s protected with bearer token %s\n", *listen_on, *secret_token)
-	http.ListenAndServe(*listen_on, handlers.LoggingHandler(os.Stdout, http.DefaultServeMux))
 }
