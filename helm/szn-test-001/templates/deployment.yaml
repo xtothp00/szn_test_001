@@ -25,5 +25,7 @@ spec:
           resources:
           {{- range $key, $value := $.Values.App.Resources }}
             {{ $key }}:
-              {{ toYaml $value }}
+            {{- range $key2, $value2 := $value }}
+              {{ $key2 }}: {{ $value2 }}
+            {{- end }}
           {{- end }}
