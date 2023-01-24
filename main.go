@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	listen_on    = flag.String("listen-on", "localhost:8090", "Address to bind to")
+	listen_on    = flag.String("listen-on", "0.0.0.0:8090", "Address to bind to")
 	secret_token = flag.String("secret_token", "", "Token to authorize requests")
 )
 
