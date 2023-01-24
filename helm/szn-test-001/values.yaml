@@ -1,0 +1,21 @@
+replicaCount: 1
+
+image:
+  repository: docker.io/xtothp00/szn-test-001
+  pullPolicy: IfNotPresent
+  tag: "1.0.0"
+
+service:
+  name: app-service
+  type: ClusterIP
+  port: 8090
+  targetPort: 8090
+
+App:
+  Resources:
+    limits:
+      cpu: 100m
+#      memory: 128Mi
+    requests:
+      cpu: 100m
+#      memory: 128Mi
