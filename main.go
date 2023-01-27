@@ -2,21 +2,20 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
-	"net/http"
 	"os"
 	"sort"
-
+	"math/rand"
+	"net/http"
 	"github.com/gorilla/handlers"
 	"github.com/namsral/flag"
 )
 
 var (
-	listen_on    = flag.String("listen-on", "localhost:8090", "Address to bind to")
+	listen_on    = flag.String("listen-on", "0.0.0.0:8090", "Address to bind to")
 	secret_token = flag.String("secret_token", "", "Token to authorize requests")
 )
 
-func hello(w http.ResponseWriter, req *http.Request) {
+func Hello(w http.ResponseWriter, req *http.Request) {
 	if req.Header.Get("Authorization") != "Bearer "+*secret_token {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -60,7 +59,7 @@ func main() {
 		*secret_token = fmt.Sprintf("changeme:%d", rand.Int())
 	}
 
-	http.HandleFunc("/api/hello", hello)
+	http.HandleFunc("/api/hello", Hello)
 
 	fmt.Fprintf(os.Stderr, "Serving on %s protected with bearer token %s\n", *listen_on, *secret_token)
 	http.ListenAndServe(*listen_on, handlers.LoggingHandler(os.Stdout, http.DefaultServeMux))
