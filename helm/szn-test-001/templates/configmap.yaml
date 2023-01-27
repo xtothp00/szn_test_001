@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}
+data:
+  check_api.sh: |
+    #!/usr/bin/env sh
+    
+    cat << HEADER
+    GET /api/hello HTTP/1.0
+    User-Agent: nc
+    Content-Length: 0
+    Authorization: Bearer <TOKEN>
+    Accept: */*
+    
+    
+    
+    
+    HEADER
+
+    nc localhost {{ .Values.service.port }} << HEADER
+    GET /api/hello HTTP/1.0
+    User-Agent: nc
+    Content-Length: 0
+    Authorization: Bearer ${TOKEN}
+    Accept: */*
+    
+    
+    
+    
+    HEADER
