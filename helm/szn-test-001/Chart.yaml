@@ -1,0 +1,9 @@
+apiVersion: v2
+name: app
+description: Solution of the given test from the job applicant xtothp00
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+mainteners:
+- email: toth20@post.sk
+  name: xtothp00

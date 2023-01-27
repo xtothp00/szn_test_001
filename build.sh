@@ -29,7 +29,7 @@ else
 fi
 printf "building the test image...\n"
 if [ -n "${STATIC}" ]; then
-    CONTAINER=$(buildah from scratch)
+    CONTAINER=$(buildah from ${STATIC_FROM:=scratch})
     buildah copy ${CONTAINER} ${APP_NAME:=app} /bin/${APP_NAME:=app}
 else
     echo CONTAINER=$(buildah from ${BUILD_CONTAINER_IMAGE})

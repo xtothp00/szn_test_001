@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: szn-test
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: szn-test
+      app.kubernetes.io/name: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: szn-test
+        app.kubernetes.io/name: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: app
+              containerPort: 8090
+              protocol: TCP
+          resources:
+          {{- range $key, $value := $.Values.App.Resources }}
+            {{ $key }}:
+            {{- range $key2, $value2 := $value }}
+              {{ $key2 }}: {{ $value2 }}
+            {{- end }}
+          {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: app
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            #            httpGet:
+            #              path: /api/hello
+            #              port: app
+            #              httpHeaders:
+            #                - name: Authorization
+            #                  value: Bearer {{ .Values.token }}
+            exec:
+              command:
+                - sh
+                - /bin/script/check_api.sh
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          volumeMounts:
+          - name: script-volume
+            mountPath: /bin/script
+          env:
+          - name: TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }} 
+                key: TOKEN
+
+      volumes:
+        - name: script-volume
+          configMap:
+            name: {{ .Release.Name }}
+            items:
+              - key: check_api.sh
+                path: check_api.sh

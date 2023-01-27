@@ -1,0 +1,6 @@
+for the secrets a plugin needs to be installed
+```
+sudo helm plugin install https://github.com/zendesk/helm-secrets
+```
+To use this plugin the relevant encryption key need to be imported into the GPG.
+The usage is nearly the same as without the plugin, eg. to upgrade: `helm secret upgrade…`
